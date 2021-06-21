@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="refresh" content="300" />
+    <title>Twitter</title>
+    <link rel="icon" href="favicon.ico">
+    <meta name="description" content="Bootstrap.">
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.6.0/dist/umd/popper.min.js"></script>
+    <link rel="stylesheet" href="http://cdn.datatables.net/1.10.25/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap.min.css">
+    <script type="text/javascript" src="http://cdn.datatables.net/1.10.25/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/css/bootstrap.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.0.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.datatables.net/fixedcolumns/3.3.3/js/dataTables.fixedColumns.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/qcq13wnijjd5hq1b2mvoe5s2ttz47oa7keitchz9qhoj2vg6/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+    <script>
+        tinymce.init({
+            selector: "textarea#editor",
+            skin: "bootstrap",
+            plugins: "lists, link, image, media ",
+            toolbar: "insertfile undo redo | styleselect | bold italic strikethrough blockquote bullist numlist backcolor forecolor | link image media | removeformat help",
+            menubar: false,
+            toolbar_mode: "floating",
+            setup: (editor) => {
+                // Apply the focus effect
+                editor.on("init", () => {
+                    editor.getContainer().style.transition = "border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out";
+                });
+                editor.on("focus", () => {
+                    (editor.getContainer().style.boxShadow = "0 0 0 .2rem rgba(0, 172, 238, .25)"), (editor.getContainer().style.borderColor = "#00acee");
+                });
+                editor.on("blur", () => {
+                    (editor.getContainer().style.boxShadow = ""), (editor.getContainer().style.borderColor = "");
+                });
+            },
+        });
+        // Prevent Bootstrap dialog from blocking focusin
+        $(document).on("focusin", function(e) {
+            if ($(e.target).closest(".tox-tinymce-aux, .moxman-window, .tam-assetmanager-root").length) {
+                e.stopImmediatePropagation();
+            }
+        });
+    </script>
+</head>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <!-- Container wrapper -->
+    <div class="container">
+        <!-- Navbar brand -->
+        <a class="navbar-brand me-2" href="https://www.linkedin.com/in/harmilapsingh/" target="_blank"> <i class="fab fa-twitter" style="font-size:42px;color:#00acee"></i></a>
+        <!-- Toggle button -->
+        <button class="navbar-toggler" type="button" data-mdb-toggle="collapse" data-mdb-target="#navbarButtonsExample" aria-controls="navbarButtonsExample" aria-expanded="false" aria-label="Toggle navigation"> <i class="fas fa-bars"></i> </button>
+        <!-- Collapsible wrapper -->
+        <div class="collapse navbar-collapse" id="navbarButtonsExample">
+            <!-- Left links -->
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/reddit">Reddit</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">Twitter</a>
+                </li>
+            </ul>
+            <!-- Left links -->
+            <div class="d-flex align-items-center">
+                <a type="button" id="create-tweet" styles="float: right;"><i class="fab fa-twitter" style="font-size:32px;color:#00acee"></i></a>
+            </div>
+        </div>
+        <!-- Collapsible wrapper -->
+    </div>
+    <!-- Container wrapper -->
+</nav>
+
+<body style="background-color:white;">
+    <div class="container">
+        <div class="modal" id="tweetModal" role="dialog">
+            <div class="modal-dialog" style="max-width: 80%;">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Tweet a Tweet <i class="fab fa-twitter" style="font-size:32px;color:#00acee"></i>
+                            <i class="fab fa-twitter fa-spin" style="font-size:32px;color:#00acee"></i>
+                            <i class="fab fa-twitter" style="font-size:32px;color:#00acee"></i>
+                        </h4>
+                        <a type="button" id="closeTwitter" data-dismiss="modal"><i class="fas fa-times-circle" style="font-size:32px"></i></a>
+                    </div>
+                    <form id="twitterForm" method="POST">
+                        <div class="container mt-4 mb-4">
+                            <div class="row justify-content-md-center">
+                                <div class="col-md-12 col-lg-8">
+                                    <div class="form-group">
+                                        <textarea id="editor" name="editor"></textarea>
+                                    </div>
+                                    <button type="submit" onClick="window.parent.location.reload();window.close()" style="border:none;background-color:transparent;"><i class="fab fa-twitter" style="font-size:42px;color:#00acee"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#tab-table1" type="button" role="tab" aria-controls="home" aria-selected="true"><b>Twitter Feed</b></button>
+                </li>
+                <li>
+                    <button class="nav-link" id="home-tab" data-bs-toggle="tab" data-bs-target="#tab-table2" type="button" role="tab" aria-controls="home" aria-selected="true"><b>Twitter Personal Feed</b></button>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane fade show active" id="tab-table1">
+                    <table id="myTable1" class="table table-striped cell-border" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Time Created</th>
+                                <th>Author</th>
+                                <th>Twitter Name</th>
+                                <th>Likes</th>
+                                <th>ReTweets</th>
+                                <th>Post</th>
+                                <th># Tweets</th>
+                                <th>Link</th>
+                            </tr>
+                        </thead>
+                        <tbody> {% for p in posts %}
+                            <tr>
+                                <td>{{ p['created'] }}</td>
+                                <td>{{ p['author'] }}</td>
+                                <td>{{ p['twitterName'] }}</td>
+                                <td>{{ p['likes'] }}</td>
+                                <td>{{ p['retweets'] }}</td>
+                                <td>{{ p['post'] }}</td>
+                                <td>{{ p['tweetsCount'] }}</td>
+                                <td>{{ p['url'] }}</td>
+                            </tr> {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tab-pane" id="tab-table2">
+                    <table id="myTable2" class="table table-striped cell-border" cellspacing="0" width="100%">
+                        <thead>
+                            <tr>
+                                <th>Time Created</th>
+                                <th>Author</th>
+                                <th>Twitter Name</th>
+                                <th>Likes</th>
+                                <th>ReTweets</th>
+                                <th>Post</th>
+                                <th># Tweets</th>
+                                <th>Link</th>
+                            </tr>
+                        </thead>
+                        <tbody> {% for p in posts %}
+                            <tr>
+                                <td>{{ p['created'] }}</td>
+                                <td>{{ p['author'] }}</td>
+                                <td>{{ p['twitterName'] }}</td>
+                                <td>{{ p['likes'] }}</td>
+                                <td>{{ p['retweets'] }}</td>
+                                <td>{{ p['post'] }}</td>
+                                <td>{{ p['tweetsCount'] }}</td>
+                                <td>{{ p['url'] }}</td>
+                            </tr> {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal" role="dialog">
+            <div class="modal-dialog modal-xl">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Twitter Post</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="timeCreated">
+                            <p>Time Created: </p><span></span></div>
+                        <div class="author">
+                            <p>Author: </p><span></span></div>
+                        <div class="twitterName">
+                            <p>Twitter Name: </p><span></span></div>
+                        <div class="likes">
+                            <p>Likes: </p><span></span></div>
+                        <div class="retweets">
+                            <p>Retweets: </p><span></span></div>
+                        <div class="post">
+                            <p>Post: </p><span></span></div>
+                        <div class="tweetCount">
+                            <p>Tweets Count by User: </p><span></span></div>
+                        <div class="link">
+                            <p>Url: </p><b><span></span></b></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="closemodal" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="myModal2" role="dialog">
+            <div class="modal-dialog modal-xl">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Twitter Post</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="timeCreated">
+                            <p>Time Created: </p><span></span></div>
+                        <div class="author">
+                            <p>Author: </p><span></span></div>
+                        <div class="twitterName">
+                            <p>Twitter Name: </p><span></span></div>
+                        <div class="likes">
+                            <p>Likes: </p><span></span></div>
+                        <div class="retweets">
+                            <p>Retweets: </p><span></span></div>
+                        <div class="post">
+                            <p>Post: </p><span></span></div>
+                        <div class="tweetCount">
+                            <p>Tweets Count by User: </p><span></span></div>
+                        <div class="link">
+                            <p>Url: </p><b><span></span></b></div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" id="closemodal2" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+<nav class="navbar fixed-bottom" style="background-color:#003153;font-weight:bold">
+    <div class="container-fluid"> <a class="navbar-brand" href="#" style="color:white">© 2021 - Site Built By Harmilap Singh | BDAT 1007 - Social Mining Techniques, BIG DATA ANALYTICS</a> </div>
+</nav>
+<!--JavaScript, jQuery, AJAX script to add data using forms-->
+<script>
+    $(document).ready(function() {
+        $('a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+            $.fn.dataTable.tables({
+                visible: true,
+                api: true
+            }).columns.adjust();
+        });
+
+        $('table.table').DataTable({
+            searching: true,
+            responsive: true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+            "scrollY": "350px",
+            "scrollX": true,
+            "order": [
+                [0, "desc"]
+            ]
+        });
+
+        // Apply a search to the second table for the demo
+        $('#myTable2').DataTable().search('Harmila41333232').draw();
+    });
+
+    $("#create-tweet").click(function() {
+        $("#tweetModal").modal("show");
+    });
+    $('#closeTwitter').click(function() {
+        $("#tweetModal").modal("hide");
+    });
+</script>
+<script>
+    $(document).ready(function() {
+        $("form#twitterForm").submit(function(event) {
+            event.preventDefault();
+            var text = $("#editor").val();
+            $.ajax({
+                type: "POST",
+                contentType: "application/json;charset=UTF-8",
+                url: "http://localhost:5000/postTwitter",
+                data: JSON.stringify({
+                    'tweet': text
+                }),
+                dataType: "json",
+                cache: false,
+                success: function() {
+                    alert('success');
+                }
+            });
+        });
+    });
+</script>
+
+<script>
+    jQuery(document).ready(function($) {
+        $('#example').DataTable({
+            searching: true,
+            responsive: true,
+            "autoWidth": true,
+            "scrollCollapse": true,
+            "scrollY": "440px",
+            "scrollX": true,
+        });
+        var table = $('#myTable1').DataTable();
+        $('#myTable1 tbody').on('click', 'tr', function() {
+            $(".modal-body div span").text("");
+            $(".timeCreated span").text(table.row(this).data()[0]);
+            $(".author span").text(table.row(this).data()[1]);
+            $(".twitterName span").text(table.row(this).data()[2]);
+            $(".likes span").text(table.row(this).data()[3]);
+            $(".retweets span").text(table.row(this).data()[4]);
+            $(".post span").text(table.row(this).data()[5]);
+            $(".tweetCount span").text(table.row(this).data()[6]);
+            $(".link span").text(table.row(this).data()[7]);
+            $("#myModal").modal("show");
+        });
+
+        var table1 = $('#myTable2').DataTable();
+        $('#myTable2 tbody').on('click', 'tr', function() {
+            $(".modal-body div span").text("");
+            $(".timeCreated span").text(table1.row(this).data()[0]);
+            $(".author span").text(table1.row(this).data()[1]);
+            $(".twitterName span").text(table1.row(this).data()[2]);
+            $(".likes span").text(table1.row(this).data()[3]);
+            $(".retweets span").text(table1.row(this).data()[4]);
+            $(".post span").text(table1.row(this).data()[5]);
+            $(".tweetCount span").text(table1.row(this).data()[6]);
+            $(".link span").text(table1.row(this).data()[7]);
+            $("#myModal2").modal("show");
+        });
+        $('#closemodal').click(function() {
+            $("#myModal").modal("hide");
+        });
+        $('#closemodal2').click(function() {
+            $("#myModal2").modal("hide");
+        });
+    });
+</script>
+
+<style>
+    .btn-purple {
+        color: #fff;
+        background-color: #6f42c1;
+        border-color: #643ab0;
+    }
+    
+    .modal-body div {
+        float: left;
+        width: 100%;
+    }
+    
+    .modal-body div p {
+        float: left;
+        width: 20%;
+        font-weight: 600;
+    }
+    
+    .modal-body div span {
+        float: left;
+        width: 80%
+    }
+</style>
+
+</html>
