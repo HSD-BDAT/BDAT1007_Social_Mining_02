@@ -14,10 +14,10 @@ import html2text
 from pymongo import MongoClient
 
 #%%
-consumer_key = "ifw5Uzvta4k8YvyKJJiBBMxNq" 
-consumer_secret = "0XzYrX1ClvlmFIDKkRMs2mfo2v46G8NmA38wRHOck5TNGPAKMw"
-access_key = "1392220044373872641-Z5fv2UZiSF4yFlPdf7Wauup4Mi9n0V"
-access_secret = "UqCKaGoVrg02Gs7I0h3saXZBH38x64DzcD6y4kXhDKbtJ"
+consumer_key = "xxxxxxxxxx" 
+consumer_secret = "xxxxxxxxxx"
+access_key = "xxxxxxxxxx"
+access_secret = "xxxxxxxxxx"
 
 #%%
 # Twitter authentication
@@ -34,11 +34,11 @@ except:
     print("Error during authentication")
     
 #%%
-reddit1 = praw.Reddit(client_id='LDBzgY0k74p-pw', 
-                 client_secret='vly4cy2W0Qt0NFD6Bjpej9CPWq3kIQ', 
-                 user_agent='bdat_1007_HSD',
-                 username="bdatHSD_007", 
-                 password="`Y<XS/9HDV][@{f^")  
+reddit1 = praw.Reddit(client_id='xxxxxxxxxx', 
+                 client_secret='xxxxxxxxxx', 
+                 user_agent='xxxxxxxxxx',
+                 username="xxxxxxxxxx", 
+                 password="xxxxxxxxxx")  
 
 #%%
 app = Flask(__name__)
@@ -74,7 +74,7 @@ def twitter():
         try: db.tweets.insert_one(posts)
         except: continue
         
-    tweets = api.user_timeline(screen_name='Harmila41333232', count=200, include_rts = False, tweet_mode = 'extended')
+    tweets = api.user_timeline(screen_name='xxxxxxxxxx', count=200, include_rts = False, tweet_mode = 'extended')
 
     for tweet in tweets[:10]:
         posts = dict()
@@ -101,11 +101,11 @@ def twitter():
 #%%
 @app.route('/reddit', methods = ['GET'])
 def reddit():
-    reddit1 = praw.Reddit(client_id='LDBzgY0k74p-pw', 
-                 client_secret='vly4cy2W0Qt0NFD6Bjpej9CPWq3kIQ', 
-                 user_agent='bdat_1007_HSD',
-                 username="bdatHSD_007", 
-                 password="`Y<XS/9HDV][@{f^")  
+    reddit1 = praw.Reddit(client_id='xxxxxxxxxx', 
+                 client_secret='xxxxxxxxxx', 
+                 user_agent='xxxxxxxxxx',
+                 username="xxxxxxxxxx", 
+                 password="xxxxxxxxxx")  
     
     new_bets = reddit1.subreddit("football").new(limit=30)
 
@@ -125,7 +125,7 @@ def reddit():
         except:
             continue
         
-    user = reddit1.redditor("bdatHSD_007")
+    user = reddit1.redditor("xxxxxxxxxx")
     submissions = user.submissions.new(limit=None) 
     for post in submissions:
         posts = dict()
